@@ -19,6 +19,13 @@ struct no{
     tNo* next;
 };
 
+
+void liberaNo(tLista* lista, tNo* no){
+    lista->freeFun(no->item);
+    free(no);
+}
+
+
 /**
  * @brief Responde se a lista é vazia
  * @param lista endereco da lista
@@ -55,7 +62,7 @@ tLista* criaLista(void (*freeFun)(void *), int (*comp)(const void *, const void 
  * @return ponteiro para o novo no
 */
 
-tNo* CriaNovoNo(){
+tNo* criaNovoNo(){
     tNo* novoNo = (tNo*) calloc(1, sizeof(tNo));
     if(!novoNo){
         printf("ERRO DE ALOCACAO DE MEMORIA DO NOVO NO\n");
@@ -76,7 +83,7 @@ tNo* CriaNovoNo(){
 */
 
 void AdInicioLista(tLista *lista, void *item){
-    tNo* novoNo = CriaNovoNo();
+    tNo* novoNo = criaNovoNo();
     
     novoNo->item = item;
     novoNo->next = lista->primeiroNo;
@@ -98,7 +105,7 @@ void AdInicioLista(tLista *lista, void *item){
 */
 
 void AdFimLista(tLista *lista, void *item){
-    tNo* novoNo = CriaNovoNo();
+    tNo* novoNo = criaNovoNo();
     
     novoNo->item = item;
     novoNo->next = NULL;
@@ -133,9 +140,8 @@ void deletaInicioLista(tLista* lista){
 
     //caso geral
     lista->primeiroNo = lista->primeiroNo->next;
-    lista->freeFun(noParaFree->item);
-    free(noParaFree);
     lista->tam--;
+    liberaNo(lista,noParaFree);
 }
 
 /**
@@ -167,6 +173,127 @@ void deletaFimLista(tLista* lista){
     //caso geral
     lista->ultimoNo = noAnterior;
     lista->freeFun(noParaFree->item);
-    free(noParaFree);
     lista->tam--;
+    liberaNo(lista,noParaFree);
 }
+
+/**
+ * @brief insere intem no index(0 - tam-1) como fazem o vetor a[2] = 3;
+ * @param lista ponteiro pra lista
+ * @param item ponteiro do item                          
+ * @param idx posicao para inserir o item
+ * @return 1 para sucesso e 0 para fracasso  
+*/
+
+int insereItemLista(tLista* lista,void* item,int idx){
+    if(!(idx<lista->tam && idx>=0))
+        return 0;
+    
+
+    tNo* novoNo = criaNovoNo();
+    novoNo->item = item;
+    
+
+    tNo* noAtual = lista->primeiroNo;
+    tNo* noAnterior = NULL;
+
+    if(idx == 0){
+        novoNo->next = lista->primeiroNo->next;
+        
+        //libera o primeiroNo
+        liberaNo(lista,lista->primeiroNo);
+        
+        lista->primeiroNo = novoNo;
+        return 1;
+    }
+
+
+
+    // no atual representa no no idx i;
+    for(int i=1;i<=idx;i++){
+        noAnterior = noAtual;
+        noAtual = noAtual->next;
+    }
+    //
+
+
+    if(idx == lista->tam-1){
+        noAnterior->next = novoNo;
+        //libera ultimo no
+
+        liberaNo(lista,lista->ultimoNo);
+
+        lista->ultimoNo = novoNo;
+        
+    }else{
+        novoNo->next = noAtual->next;
+        //libera no atual
+        liberaNo(lista,noAtual);
+
+        noAnterior->next = novoNo;
+    }
+
+   
+
+    return 1;
+
+}
+// 0 1 2 3 4
+
+/**
+ * @brief retira item da lista
+ * @param lista ponteiro pra lista
+ * @param item ponteiro do item
+ * @return 1 caso sucesso e 0 caso fracasso
+*/
+
+void retiraItemLista(tLista* lista, void* item){
+
+
+
+    tNo* noAnterior = NULL;
+    tNo* noAtual= lista->primeiroNo;
+
+    // se o primeito item da lista é o procurado
+    if(lista->comp(noAtual->item, item)){
+        lista->primeiroNo = NULL;
+        lista->ultimoNo = NULL;
+            
+        liberaNo(lista,noAtual);
+        return;
+    }
+    
+
+
+    while(noAtual->next!=NULL){
+
+        noAnterior = noAtual;
+        noAtual = noAtual->next;
+        
+        if(lista->comp(noAtual->item, item))
+            break;
+
+        
+    }
+    //se o ultimo item da lista é o achado ou o nao acha o item
+
+    if(noAtual->next == NULL ){
+        
+        if(!lista->comp(noAtual->item, item))
+            return;
+
+        noAnterior->next = NULL;
+        lista->ultimoNo = noAnterior;
+
+        //libera noAtual
+        liberaNo(lista,noAtual);
+    }
+
+    
+    //geral
+    noAnterior= noAtual->next;
+    //liberar noAtual
+    liberaNo(lista,noAtual);
+}
+
+// 0 1 2 3 4
