@@ -5,7 +5,7 @@ TARGET = meu_programa
 CC = gcc
 
 # Flags de compilação
-CFLAGS = -Wall -Wextra -Werror -std=c99 -g
+CFLAGS = -Wall -Wextra -std=c99 -g
 
 # Diretórios de código-fonte, cabeçalhos e de compilação
 SRCDIR = .
