@@ -1,5 +1,5 @@
 # Nome do seu programa
-TARGET = meu_programa
+TARGET = prog
 
 # Compilador
 CC = gcc
