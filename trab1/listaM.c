@@ -299,8 +299,8 @@ void liberaListaM(tListaM* lista){
 
 
 
-tNoM* getNoListaL(tListaM* lista, char* nome){
-    if(ehListaVaziaL(lista))
+tNoM* getNoListaM(tListaM* lista, char* nome){
+    if(ehListaVaziaM(lista))
         return NULL;
 
     if(compProdutoM(lista->primeiroNo->item, nome)){

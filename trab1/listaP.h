@@ -35,5 +35,5 @@ int getTamP(tLista* lista);
 void setListaMEmP(tNo* no, tListaM* lista);
 
 
-char* getListaMDeP(tNo* no);
+tListaM* getListaMDeP(tNo* no);
 #endif

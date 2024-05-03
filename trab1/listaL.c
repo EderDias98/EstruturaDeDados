@@ -1,6 +1,7 @@
 #include "listaL.h"
 
 #include "listaP.h"
+#include "listaM.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -100,6 +101,7 @@ void liberaNoL(tNoL* no){
     free(no->item);
     liberaAmigos(no->amigos);
     // nao esquecer de liberar a lista dentro do no;
+    liberaListaP(no->lista);
     free(no);
 }
 
@@ -443,3 +445,75 @@ char* getNomeL(tNoL* no){
     return no->item;
 }
 // 0 1 2 3 4 5
+int ehMusicasIguais(tNoM* no1, tNoM* no2){
+    if(strcmp(getAutorM(no1), getAutorM(no2))==0){
+        if(strcmp(getDescM(no1), getDescM(no2))==0){
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+int contMusicasIguais(tNoL* no1, tNoL* no2){
+    tLista* listaP1 = getListaPDeL(no1);
+    tLista* listaP2 = getListaPDeL(no2);
+    tNo* noP1;
+    tNo* noP2;
+    tListaM* listaM1;
+    tListaM* listaM2;
+    tNoM* noM1;
+    tNoM* noM2;
+    int qtd=0;
+    int flagR=0;
+    //pra cada musica de p1 ver se tem uma musica iqual em p2;
+    for(int i=0; i<getTamP(listaP1);i++){
+
+        noP1 = getNoListaIdxP(listaP1,i);
+        listaM1 = getListaMDeP(noP1);
+        flagR = 0;
+        for(int j=0; j<getTamM(listaM1);j++){
+            noM1 = getNoListaIdxM(listaM1,j);
+
+            for(int k=0; k<getTamP(listaP2);k++){
+
+                noP2 = getNoListaIdxP(listaP2,k);
+                listaM2 = getListaMDeP(noP2);
+                for(int l=0; l<getTamM(listaM2);l++){
+                    noM2 = getNoListaIdxM(listaM2,l);
+                    if(ehMusicasIguais(noM1, noM2) && !flagR){
+                        qtd++;
+                        flagR =1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+void criaSimilaridades(tListaL* listaL){
+
+    char nome_arquivo[200] = {'\0'};
+    sprintf(nome_arquivo,"SaidaM/similaridades.txt");
+    FILE *arquivo = fopen(nome_arquivo, "w");
+
+    // Verificar se o arquivo foi aberto corretamente
+    if (arquivo == NULL) {
+        fprintf(stderr, "Erro: Falha ao criar o arquivo \"%s\".\n", nome_arquivo);            
+    }
+
+    tNoL* noL;
+    tNoL* noLA;
+    int qtd=0;
+    for(int i=0; i<listaL->tam;i++){
+        noL = getNoListaIdxL(listaL,i);
+        if(noL->amigos->tam){
+            for(int j=0; j<noL->amigos->tam;j++){
+                noLA = getNoListaL(listaL, noL->amigos->vet[j]); 
+                qtd = contMusicasIguais(noL,noLA);
+                fprintf(arquivo,"%s;%s;%d\n", noL->item, noL->amigos->vet[j],qtd);
+            }
+        }
+    }
+    fclose(arquivo);
+}

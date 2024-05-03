@@ -6,30 +6,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "refatorar.h"
 
 #define TAM_NOME 100
 
-char *copiaPalavra(const char *palavra) {
-    // Obter o tamanho da palavra
-    size_t tamanho = strlen(palavra);
 
-    // Alocar memória para a cópia da palavra (incluindo o caractere nulo de terminação)
-    char *copia = (char *)malloc((tamanho + 1) * sizeof(char));
-
-    // Verificar se a alocação de memória foi bem-sucedida
-    if (copia == NULL) {
-        fprintf(stderr, "Erro: Falha ao alocar memória\n");
-        exit(EXIT_FAILURE);
-    }
-
-    // Copiar a palavra para a memória alocada
-    strcpy(copia, palavra);
-
-    // Adicionar o caractere nulo de terminação
-    copia[tamanho] = '\0';
-
-    return copia;
-}
 
 int main()
 {
@@ -141,7 +122,7 @@ int main()
             }
             // ler essa playlist e criar a lista de musicas
             listaM = criaListaVaziaM();
-            while(fscanf(playlist,"%[^-]%[^\n],%*c",nomeM, descM)!= EOF){
+            while(fscanf(playlist,"%[^-]%[^\n]%*c",nomeM, descM)!= EOF){
                 copia =copiaPalavra(nomeM);
                 descMP = copiaPalavra(descM);
                 insereFimListaM(listaM,copia,descMP);
@@ -150,7 +131,7 @@ int main()
         }
     }
 
-    imprimiListaL(listaL);
+    
 
     // quero criar novas playlists
     // para cada cantor/bando tenho uma nova playlist
@@ -161,7 +142,12 @@ int main()
     //criar uma array com todos  as bandas e cantores, e procurar as suas musicas;
     // pra cada cantor/banda fazer nova playlist;
 
+    refatoraListaL(listaL);
+    // imprimiListaL(listaL);
 
+    criaPastasEArquivos(listaL);
 
+    // se usuario tem amigos
+    // eu conto a quatidade de musicas iguais que eles tem
     return 0;
 }

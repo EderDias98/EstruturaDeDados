@@ -37,6 +37,7 @@ int ehListaVaziaP(tLista* lista){
 
 void liberaNoP(tNo* no){
     free(no->item);
+    liberaListaM(no->lista);
     free(no);
 }
 
@@ -374,7 +375,7 @@ void liberaListaP(tLista* lista){
     free(lista);
 }
 
-char* getListaMDeP(tNo* no){
+tListaM* getListaMDeP(tNo* no){
     return no->lista;
 }
 // 0 1 2 3 4 5

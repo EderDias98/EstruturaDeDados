@@ -25,12 +25,12 @@ void liberaListaM(tListaM* lista); //correto
 
 char* getNomeM(tNoM* no);
 
-
+int getTamM(tListaM* lista);
 
 char* getAutorM(tNoM* no);
 
 tNoM* getNoListaIdxM(tListaM* lista,int idx);
-
+tNoM* getNoListaM(tListaM* lista, char* nome);
 
 tNoM* copiaNoM(tNoM* no);
 

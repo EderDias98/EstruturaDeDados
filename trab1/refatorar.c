@@ -6,6 +6,7 @@
 #include "listaM.h"
 #include "listaP.h"
 #include <unistd.h>
+#include <sys/stat.h>
 
 char *copiaPalavra(const char *palavra) {
     // Obter o tamanho da palavra
@@ -42,7 +43,7 @@ tAutores* criaAutores(){
 }
 
 tAutores* preencheAutores(tLista* listaP){
-    tLista* listaP;
+
     tNo* noP;
     tListaM* listaM;
     tNoM* noM;
@@ -55,7 +56,7 @@ tAutores* preencheAutores(tLista* listaP){
         for(int k=0; k< getTamM(listaM);k++){
 
             noM = getNoListaIdxM(listaM,k);
-            nome = getNomeM(noM);
+            nome = getAutorM(noM);
             nome = copiaPalavra(nome);
             if(ehNomeUnico(autores, nome)){
                 insereAutores(autores,nome);
@@ -107,13 +108,13 @@ tLista* criaPlaylistFatorada(tAutores* autores, tLista* ListaP){
     // nova playlist como todas as musicas dos autores
     tLista* nListaP;
     tNo* noP;
-    tListaM* listaM;
+    tListaM* listaMN;
+    tListaM* listaMA;
     tNoM* noM;
     char* autor;
     char* nome;
-
     nListaP = criaListaVaziaP();
-    tListaM* listaM; 
+ 
     for(int i=0; i< autores->tam;i++){
         novoNome = copiaPalavra(autores->vet[i]);
         //tirar o espaco do final dos nomes do autores
@@ -124,30 +125,34 @@ tLista* criaPlaylistFatorada(tAutores* autores, tLista* ListaP){
 
 
         nome = autores->vet[i];
-
+        listaMN = criaListaVaziaM();
         for(int j=0; j<getTamP(ListaP);j++){
-            listaM = criaListaVaziaM();
+            
 
             noP =getNoListaIdxP(ListaP,j);
-            listaM = getListaMDeP(noP);
+            listaMA = getListaMDeP(noP);
 
-            for(int k=0; k< getTamM(listaM);k++){
+            for(int k=0; k< getTamM(listaMA);k++){
 
-                noM = getNoListaIdxM(listaM,k);
-                autor = getAutorM(noM);
+                noM =getNoListaIdxM(listaMA,k);
+                autor = copiaPalavra(getAutorM(noM));  
                 //testar se musica e do mesmo autor e se for colocar na listaM
                 if(strcmp(autor,nome)==0){
                     //colocar musica na nova lista de musica
-                    insereFimListaM(listaM, autor, getDescM(noM));
+                    insereFimListaM(listaMN, autor, copiaPalavra(getDescM(noM)));
                 }
             }
-            //colocar a nova lista de musica no no da lista de playlist 
-            setListaMEmP(getNoListaIdxP(nListaP,i), listaM);
+            
         }
+        //colocar a nova lista de musica no no da lista de playlist 
+        setListaMEmP(getNoListaIdxP(nListaP,i), listaMN);
     }
+
+
+    return nListaP;
 }
 
-void refatoraListaL(tListaL* listaL, tAutores* autores){
+void refatoraListaL(tListaL* listaL){
     
     tLista* listaPA;
     tLista* listaPN;
@@ -155,16 +160,24 @@ void refatoraListaL(tListaL* listaL, tAutores* autores){
     for(int i=0; i< getTamL(listaL);i++){
         noL = getNoListaIdxL(listaL,i);
         listaPA = getListaPDeL(noL);
+
+        tAutores* autores = preencheAutores(listaPA);
+        imprimiAutores(autores);
+
         listaPN = criaPlaylistFatorada(autores,listaPA);
-        liberaListaP(listaPA);
+
+        // imprimiListaP(listaPN);
+
+        
         setListaPEmL(noL,listaPN);
+ 
     }
 }
 
 void criaPastasEArquivos(tListaL* listaL){
     char nome_da_pasta[100];
     // Cria a pasta com permissões padrão
-    sprintf(nome_da_pasta,"Saida");
+    sprintf(nome_da_pasta,"SaidaM");
     if (mkdir(nome_da_pasta, 0777) == 0) {
         printf("Pasta \"%s\" criada com sucesso.\n", nome_da_pasta);
     } else {
@@ -173,13 +186,21 @@ void criaPastasEArquivos(tListaL* listaL){
     tNoL* noL;
     tNo* noP;
     tLista* listaP;
-    char nome_arquivo[100];
+    char nome_arquivo[200];
     tListaM* listaM;
     tNoM* noM;
+
+    sprintf(nome_arquivo,"SaidaM/played-refatorada.txt");
+    FILE *arquivoF = fopen(nome_arquivo, "w");
+    if (arquivoF == NULL) {
+        fprintf(stderr, "Erro: Falha ao criar o arquivo \"%s\".\n", nome_arquivo);
+        
+    }
+
     for(int i=0; i< getTamL(listaL);i++){
         noL = getNoListaIdxL(listaL,i);
         
-        sprintf(nome_da_pasta,"Saida/%s", getNomeL(noL));
+        sprintf(nome_da_pasta,"SaidaM/%s", getNomeL(noL));
 
         if (mkdir(nome_da_pasta, 0777) == 0) {
             printf("Pasta \"%s\" criada com sucesso.\n", nome_da_pasta);
@@ -189,20 +210,15 @@ void criaPastasEArquivos(tListaL* listaL){
 
         //colocar as playlist na pasta com nome;
         listaP = getListaPDeL(noL);
-        sprintf(nome_arquivo,"Saida/played-refatorada.txt");
-        FILE *arquivoF = fopen(nome_arquivo, "w");
-        if (arquivoF == NULL) {
-            fprintf(stderr, "Erro: Falha ao criar o arquivo \"%s\".\n", nome_arquivo);
-            return 1;
-        }
-        fprintf(arquivoF,"%s;%d;", getNomeL(noL), getTamL(listaL));
+
+        fprintf(arquivoF,"%s;%d;", getNomeL(noL), getTamP(listaP));
         for(int j=0; j<getTamP(listaP);j++){
             noP =getNoListaIdxP(listaP,j);
             
             if(j !=getTamP(listaP) -1){
-                fprintf(arquivoF,"%s%s;", getNomeP(noP));
+                fprintf(arquivoF,"%s;", getNomeP(noP));
             }else{
-                fprintf(arquivoF,"%s%s\n", getNomeP(noP));
+                fprintf(arquivoF,"%s\n", getNomeP(noP));
             }
             
             // Nome do arquivo que você deseja criar
@@ -214,7 +230,7 @@ void criaPastasEArquivos(tListaL* listaL){
             // Verificar se o arquivo foi aberto corretamente
             if (arquivo == NULL) {
                 fprintf(stderr, "Erro: Falha ao criar o arquivo \"%s\".\n", nome_arquivo);
-                return 1;
+                
             }
 
             //imprimirMusicasNoArquivo
@@ -225,7 +241,8 @@ void criaPastasEArquivos(tListaL* listaL){
             }
             // Fechar o arquivo
             fclose(arquivo);
+
         }
     }
-    
+    fclose(arquivoF);
 }

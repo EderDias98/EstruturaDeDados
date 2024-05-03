@@ -41,4 +41,5 @@ int getTamL(tListaL* lista);
 tNoL* getNoListaIdxL(tListaL* lista,int idx);
 tLista* getListaPDeL(tNoL* no);
 char* getNomeL(tNoL* no);
+void criaSimilaridades(tListaL* listaL);
 #endif
