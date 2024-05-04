@@ -60,6 +60,8 @@ tAutores* preencheAutores(tLista* listaP){
             nome = copiaPalavra(nome);
             if(ehNomeUnico(autores, nome)){
                 insereAutores(autores,nome);
+            }else{
+                free(nome);
             }
         }
     }
@@ -104,7 +106,7 @@ tLista* criaPlaylistFatorada(tAutores* autores, tLista* ListaP){
 
     // colocar no nome certo das playlists
     char *novoNome;
-
+    char temp[200];
     // nova playlist como todas as musicas dos autores
     tLista* nListaP;
     tNo* noP;
@@ -113,19 +115,26 @@ tLista* criaPlaylistFatorada(tAutores* autores, tLista* ListaP){
     tNoM* noM;
     char* autor;
     char* nome;
+    char *desc;
+    // criar uma nova listaP vazia
     nListaP = criaListaVaziaP();
     
     for(int i=0; i< autores->tam;i++){
-        novoNome = copiaPalavra(autores->vet[i]);
+        
         //tirar o espaco do final dos nomes do autores
-        novoNome[strlen(novoNome)-1] ='\0';
-        strcat(novoNome,".txt");
+        sprintf(temp,"%s", autores->vet[i]);
+        
+        temp[strlen(temp)-1] ='\0';
+        strcat(temp,".txt");
+
+        novoNome = copiaPalavra(temp);
         
         insereFimListaP(nListaP,novoNome);
 
 
         nome = autores->vet[i];
         listaMN = criaListaVaziaM();
+        
         for(int j=0; j<getTamP(ListaP);j++){
             
 
@@ -136,14 +145,18 @@ tLista* criaPlaylistFatorada(tAutores* autores, tLista* ListaP){
 
                 noM =getNoListaIdxM(listaMA,k);
                 autor = copiaPalavra(getAutorM(noM));  
+                desc =  copiaPalavra(getDescM(noM));
                 //testar se musica e do mesmo autor e se for colocar na listaM
                 if(strcmp(autor,nome)==0){
                     //colocar musica na nova lista de musica
                     //saber se ja tem musica na lista MN
                     if(getNoListaM(listaMN,getDescM(noM))!=NULL)
                         continue;
-                    insereFimListaM(listaMN, autor, copiaPalavra(getDescM(noM)));
+                    insereFimListaM(listaMN, autor,desc);
                     
+                }else{
+                    free(autor);
+                    free(desc);
                 }
             }
             
@@ -169,11 +182,12 @@ void refatoraListaL(tListaL* listaL){
         imprimiAutores(autores);
 
         listaPN = criaPlaylistFatorada(autores,listaPA);
-
-        // imprimiListaP(listaPN);
+        liberaAutores(autores);
+       
 
         
         setListaPEmL(noL,listaPN);
+      
  
     }
 }

@@ -324,7 +324,7 @@ tNoM* getNoListaM(tListaM* lista, char* nome){
         }
     }
 
-    printf("Nao tem esse nome na ListaM\n");
+    
     return NULL;
 }
 

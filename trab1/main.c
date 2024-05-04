@@ -57,9 +57,11 @@ int main()
         if(quemVemPrimeiro(listaL,copiaA,copia) == 1){
             atual = getNoListaL(listaL, amigo1);
             InsereAmigoListaL(atual, copia);
+            free(copiaA);
         }else{
             atual = getNoListaL(listaL,amigo2);
             InsereAmigoListaL(atual, copiaA);
+            free(copia);
         }
         
         
@@ -69,7 +71,7 @@ int main()
     }
     // até a aqui eu tenho uma listaL com os usuários e seus amigos na struct amigos
     // Fecha o amizade
-    imprimiListaL(listaL);
+ 
 
     fclose(amizade);
 
@@ -104,11 +106,14 @@ int main()
             insereFimListaP(listaP,copia);
         }
         memset(amigo1, '\0', sizeof(amigo1));
+       
         setListaPEmL(atual,listaP);
 
     }
 
     fclose(playlists);
+
+ 
     // agora eu tenho que carregar cada playlista com uma lista de musicas
     char nomeM[TAM_NOME];
     char descM[TAM_NOME];
@@ -152,7 +157,9 @@ int main()
                 insereFimListaM(listaM,copia,descMP);
             }
             setListaMEmP(noP,listaM);
+            fclose(playlist);
         }
+         
     }
 
     
@@ -166,6 +173,8 @@ int main()
     //criar uma array com todos  as bandas e cantores, e procurar as suas musicas;
     // pra cada cantor/banda fazer nova playlist;
 
+
+
     refatoraListaL(listaL);
     // imprimiListaL(listaL);
 
@@ -174,5 +183,7 @@ int main()
     criaSimilaridades(listaL);
     // se usuario tem amigos
     // eu conto a quatidade de musicas iguais que eles tem
+
+    liberaListaL(listaL);
     return 0;
 }
