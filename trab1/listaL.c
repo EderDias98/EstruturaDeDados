@@ -471,10 +471,10 @@ int contMusicasIguais(tNoL* no1, tNoL* no2){
 
         noP1 = getNoListaIdxP(listaP1,i);
         listaM1 = getListaMDeP(noP1);
-        flagR = 0;
+        
         for(int j=0; j<getTamM(listaM1);j++){
             noM1 = getNoListaIdxM(listaM1,j);
-
+            flagR = 0;
             for(int k=0; k<getTamP(listaP2);k++){
 
                 noP2 = getNoListaIdxP(listaP2,k);
@@ -489,7 +489,22 @@ int contMusicasIguais(tNoL* no1, tNoL* no2){
             }
         }
     }
+    return qtd;
 }
+
+
+int quemVemPrimeiro(tListaL* listaL, char* nome1, char* nome2){
+    tNoL* noL;
+    for(int i=0; i<listaL->tam;i++){
+        noL = getNoListaIdxL(listaL,i);
+        if(strcmp(nome1, noL->item)==0)
+            return 1;
+        if(strcmp(nome2,noL->item) == 0)
+            return 2;
+    }
+    return 3;
+}
+
 
 void criaSimilaridades(tListaL* listaL){
 
@@ -505,15 +520,19 @@ void criaSimilaridades(tListaL* listaL){
     tNoL* noL;
     tNoL* noLA;
     int qtd=0;
+    // procurar todo mundo
     for(int i=0; i<listaL->tam;i++){
         noL = getNoListaIdxL(listaL,i);
         if(noL->amigos->tam){
             for(int j=0; j<noL->amigos->tam;j++){
                 noLA = getNoListaL(listaL, noL->amigos->vet[j]); 
                 qtd = contMusicasIguais(noL,noLA);
+                
                 fprintf(arquivo,"%s;%s;%d\n", noL->item, noL->amigos->vet[j],qtd);
             }
         }
+    
+
     }
     fclose(arquivo);
 }

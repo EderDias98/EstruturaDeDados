@@ -42,4 +42,5 @@ tNoL* getNoListaIdxL(tListaL* lista,int idx);
 tLista* getListaPDeL(tNoL* no);
 char* getNomeL(tNoL* no);
 void criaSimilaridades(tListaL* listaL);
+int quemVemPrimeiro(tListaL* listaL, char* nome1, char* nome2);
 #endif

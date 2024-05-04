@@ -114,7 +114,7 @@ tLista* criaPlaylistFatorada(tAutores* autores, tLista* ListaP){
     char* autor;
     char* nome;
     nListaP = criaListaVaziaP();
- 
+    
     for(int i=0; i< autores->tam;i++){
         novoNome = copiaPalavra(autores->vet[i]);
         //tirar o espaco do final dos nomes do autores
@@ -139,7 +139,11 @@ tLista* criaPlaylistFatorada(tAutores* autores, tLista* ListaP){
                 //testar se musica e do mesmo autor e se for colocar na listaM
                 if(strcmp(autor,nome)==0){
                     //colocar musica na nova lista de musica
+                    //saber se ja tem musica na lista MN
+                    if(getNoListaM(listaMN,getDescM(noM))!=NULL)
+                        continue;
                     insereFimListaM(listaMN, autor, copiaPalavra(getDescM(noM)));
+                    
                 }
             }
             

@@ -303,11 +303,11 @@ tNoM* getNoListaM(tListaM* lista, char* nome){
     if(ehListaVaziaM(lista))
         return NULL;
 
-    if(compProdutoM(lista->primeiroNo->item, nome)){
+    if(compProdutoM(lista->primeiroNo->desc, nome)){
         return lista->primeiroNo;
     }
 
-    if(compProdutoM(lista->ultimoNo->item, nome)){
+    if(compProdutoM(lista->ultimoNo->desc, nome)){
         
         return lista->ultimoNo;
     }
@@ -319,7 +319,7 @@ tNoM* getNoListaM(tListaM* lista, char* nome){
     while(noAtual->next != NULL){
 
         noAtual = noAtual->next;
-        if(compProdutoM(noAtual->item, nome)){
+        if(compProdutoM(noAtual->desc, nome)){
             return noAtual;
         }
     }

@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "refatorar.h"
+#include <string.h>
 
 #define TAM_NOME 100
 
@@ -45,18 +46,30 @@ int main()
     char amigo2[TAM_NOME] = {'\0'};
 
     tNoL* atual =NULL;
+
+    char* copiaA = NULL;
     while (fscanf(amizade, "%[^;\n]%*c%[^;\n]%*c", amigo1, amigo2) != EOF)
     {
         
         copia = copiaPalavra(amigo2);
+        copiaA = copiaPalavra(amigo1);
         //procurar por amigo1 na listaL(dos usuarios) e depois acrecentar amigo2n na struct amigos;
-        atual = getNoListaL(listaL, amigo1);
-        InsereAmigoListaL(atual, copia);
+        if(quemVemPrimeiro(listaL,copiaA,copia) == 1){
+            atual = getNoListaL(listaL, amigo1);
+            InsereAmigoListaL(atual, copia);
+        }else{
+            atual = getNoListaL(listaL,amigo2);
+            InsereAmigoListaL(atual, copiaA);
+        }
+        
+        
+        
         memset(amigo1, '\0', sizeof(amigo1));
         memset(amigo2, '\0', sizeof(amigo2));
     }
     // até a aqui eu tenho uma listaL com os usuários e seus amigos na struct amigos
     // Fecha o amizade
+    imprimiListaL(listaL);
 
     fclose(amizade);
 
@@ -102,6 +115,8 @@ int main()
     tListaM* listaM;
     tNo* noP;
     char caminhoPlay[TAM_NOME];
+    char restM[TAM_NOME];
+    char nDescM[TAM_NOME];
     char* nome_play;
     for(int i=0; i<getTamL(listaL);i++){
         listaP = getListaPDeL(getNoListaIdxL(listaL,i));
@@ -123,8 +138,17 @@ int main()
             // ler essa playlist e criar a lista de musicas
             listaM = criaListaVaziaM();
             while(fscanf(playlist,"%[^-]%[^\n]%*c",nomeM, descM)!= EOF){
+                //
+                if(nomeM[strlen(nomeM)-1] != ' '){
+                    strcat(nomeM,"-");
+                    sscanf(descM,"%*c%[^-]%[^\n]%*c", restM, nDescM);
+                    strcat(nomeM,restM);
+                    descMP = copiaPalavra(nDescM);
+                }else{
+                    descMP = copiaPalavra(descM);
+                }
                 copia =copiaPalavra(nomeM);
-                descMP = copiaPalavra(descM);
+                
                 insereFimListaM(listaM,copia,descMP);
             }
             setListaMEmP(noP,listaM);
@@ -147,6 +171,7 @@ int main()
 
     criaPastasEArquivos(listaL);
 
+    criaSimilaridades(listaL);
     // se usuario tem amigos
     // eu conto a quatidade de musicas iguais que eles tem
     return 0;
