@@ -41,13 +41,14 @@ int main()
         if(espaco == '\n')
             break;
     }
-    //lê o resto
+    
 
     char amigo2[TAM_NOME] = {'\0'};
 
     tNoL* atual =NULL;
 
     char* copiaA = NULL;
+    // crio uma struct de amigos para cada no do usuario(noL)
     while (fscanf(amizade, "%[^;\n]%*c%[^;\n]%*c", amigo1, amigo2) != EOF)
     {
         
@@ -80,10 +81,10 @@ int main()
 
     FILE *playlists;
     
-    // Abre o amizade em modo de leitura
+    // Abre a playlist em modo de leitura
     playlists = fopen("Entrada/playlists.txt", "r");
 
-    // Verifica se o amizade foi aberto corretamente
+    // Verifica se a playtlist foi aberto corretamente
     if (playlists == NULL)
     {
         printf("Erro ao abrir o playlists.\n");
@@ -95,6 +96,7 @@ int main()
     tLista* listaP;
     memset(amigo1, '\0', sizeof(amigo1));
     char* descMP;
+    // crio lista de playlist e coloco ela em noL
     while (fscanf(playlists,"%[^;]%*c%d%*c", amigo1, &numP)!=EOF)
     {
         atual = getNoListaL(listaL, amigo1);
@@ -123,6 +125,7 @@ int main()
     char restM[TAM_NOME];
     char nDescM[TAM_NOME];
     char* nome_play;
+    //carrego as musicas nas playlist
     for(int i=0; i<getTamL(listaL);i++){
         listaP = getListaPDeL(getNoListaIdxL(listaL,i));
         for(int j=0; j<getTamP(listaP);j++){
@@ -164,26 +167,19 @@ int main()
 
     
 
-    // quero criar novas playlists
-    // para cada cantor/bando tenho uma nova playlist
-    //libero as antigos e usossó as novas
-
-    // criar pastas com os nomes dos usuarios pra guardas as playlists
-
-    //criar uma array com todos  as bandas e cantores, e procurar as suas musicas;
-    // pra cada cantor/banda fazer nova playlist;
 
 
 
+    //refatora a lista de acordo com a professora pediu
     refatoraListaL(listaL);
     // imprimiListaL(listaL);
 
     criaPastasEArquivos(listaL);
-
+    
+    //cria arquivo simillaridades
     criaSimilaridades(listaL);
-    // se usuario tem amigos
-    // eu conto a quatidade de musicas iguais que eles tem
 
+    // libero a memoria alicada da listaL
     liberaListaL(listaL);
     return 0;
 }

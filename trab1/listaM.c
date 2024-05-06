@@ -20,11 +20,7 @@ struct listaM{
     int tam;
 };
 
-/**
- * @brief verifica se uma lista simples e vazia
- * @param lista ponteiro pra lista;
- * @return 1 se a lista e vazia e 0 se a lista nao e vazia
-*/
+
 
 int ehListaVaziaM(tListaM* lista){
     if(lista->primeiroNo == NULL)
@@ -32,10 +28,6 @@ int ehListaVaziaM(tListaM* lista){
     else return 0;
 }
 
-/**
- * @brief libera um no da lista
- * @param no ponteiro para um no da lista
-*/
 
 void liberaNoM(tNoM* no){
     free(no->item);
@@ -43,11 +35,7 @@ void liberaNoM(tNoM* no){
     free(no);
 }
 
-/**
- * @brief cria um no da lista
- * @param item pertence ao no da lista
- * @return ponteiro para o no criado
-*/
+
 
 tNoM* criaNoM(char* item, char* desc){
     tNoM* no = (tNoM*) calloc(1, sizeof(tNoM));
@@ -60,10 +48,6 @@ tNoM* criaNoM(char* item, char* desc){
 }
 
 
-/**
- * @brief cria uma lista vazia com tamanho 0 
- * @return um ponteiro para lista que tem primeiro e ultimo no NULL
-*/
 
 tListaM* criaListaVaziaM(){
     tListaM* lista = (tListaM*) calloc(1, sizeof(tListaM));
@@ -73,19 +57,9 @@ tListaM* criaListaVaziaM(){
     return lista;
 }
 
-/**
- * @brief inseri no no inicio da lista encadeada
- * @param lista ponteiro para a lista
- * @param item item do no a ser inserido
-*/
 
 
 
-/**
- * @brief inseri no no fim da lista encadeada
- * @param lista ponteiro para a lista
- * @param item item do no a ser inserido
-*/
 
 void insereFimListaM(tListaM* lista, char* item, char* desc){
     tNoM* novoNo = criaNoM(item, desc);
@@ -103,58 +77,9 @@ void insereFimListaM(tListaM* lista, char* item, char* desc){
     lista->tam++;
 }
 
-/**
- * @brief libera primeiro item da lista encadeada
- * @param lista ponteiro para a lista
-*/
-
-void liberaPrimeiroItemListaM(tListaM* lista){
-    if(ehListaVaziaM(lista))
-        return;
-
-    //generico
-    tNoM* primeiroNo = lista->primeiroNo;
-
-    //lista so tem um no
-    if(lista->ultimoNo == lista->primeiroNo)
-        lista->ultimoNo = NULL;
-
-    lista->primeiroNo = lista->primeiroNo->next;
-    liberaNoM(primeiroNo);
-    lista->tam--;
-
-}
-
-/**
- * @brief libera ultimo item da lista encadeada
- * @param lista ponteiro para a lista
-*/
-
-void liberaUltimoItemListaM(tListaM* lista){
-    if(ehListaVaziaM(lista))
-        return;
 
 
 
-    tNoM* noAtual = lista->primeiroNo;
-    tNoM* noAnterior = NULL;
-
-    while(noAtual->next != NULL){
-        noAnterior = noAtual;
-        noAtual = noAtual->next;
-    }
-
-    //so tem um item na lista
-    if(noAtual == lista->primeiroNo)
-        lista->primeiroNo = NULL;
-    else
-        noAnterior->next =NULL;
-
-    liberaNoM(lista->ultimoNo);
-   
-    lista->ultimoNo = noAnterior;
-    lista->tam--;
-}
 
 int compProdutoM(char* item1, char* item2){
     if(strcmp(item1, item2) == 0)
@@ -162,95 +87,12 @@ int compProdutoM(char* item1, char* item2){
     else return 0;
 }
 
-/**
- * @brief libera item da lista encadeada
- * @param lista ponteiro para a lista
- * @param item item a ser liberado na lista
-*/
-void liberaItemListaM(tListaM* lista, char* item){
-    if(ehListaVaziaM(lista))
-        return;
-
-    if(compProdutoM(lista->primeiroNo->item, item)){
-        liberaPrimeiroItemListaM(lista);
-        return;
-    }
-
-    if(compProdutoM(lista->ultimoNo->item, item)){
-        liberaUltimoItemListaM(lista);
-        return;
-    }
 
 
-    tNoM* noAtual = lista->primeiroNo;
-    tNoM* noAnterior = NULL;
-
-    while(noAtual->next != NULL){
-        noAnterior = noAtual;
-        noAtual = noAtual->next;
-        if(compProdutoM(noAtual->item, item))
-            break;
-
-    }
-    //se o item nao esta na lista ele alcanca o ultimo no dela;
-    if(noAtual->next == NULL)
-        return;
-
-    //generico
-    noAnterior->next = noAtual->next;
-    liberaNoM(noAtual);
-    lista->tam--;
-
-}
 
 
-/**
- * @brief insere item na lista encadeada no index dado
- * @param lista ponteiro para a lista
- * @param item item a ser liberado na lista
- * @param  idx posicao em que sera inserido o item na lista
-*/
 
 
-/**
- * @brief libera item na lista encadeada no index dado
- * @param lista ponteiro para a lista
- * @param item item a ser liberado na lista
- * @param  idx posicao em que sera liberado o item na lista
-*/
-void liberaItemListaIdxM(tListaM* lista, int idx){
-
-    if(idx<0 || idx >=lista->tam)
-        return;
-    
-    tNoM* noAtual = lista->primeiroNo;
-    tNoM* noAnterior = NULL;
-
-    for(int i=1; i<=idx;i++){
-        noAnterior = noAtual;
-        noAtual = noAtual->next;
-    }
-
-    // o index e zero
-    if(noAtual == lista->primeiroNo){
-        liberaPrimeiroItemListaM(lista);
-        return;    
-    }
-
-    if(noAtual == lista->ultimoNo){
-        lista->ultimoNo = noAnterior;
-    }
-
-    noAnterior->next = noAtual->next;
-    liberaNoM(noAtual);
-    lista->tam--;
-    
-}
-
-/**
- * @brief imprimi os itens da lista encadeada
- * @param lista ponteiro para lista 
-*/
 void  imprimiListaM(tListaM* lista){
 
     if(ehListaVaziaM(lista))
@@ -263,10 +105,7 @@ void  imprimiListaM(tListaM* lista){
     printf("\n");
 }
 
-/**
- * @brief libera os nos da lista encadeada
- * @param lista ponteiro para lista 
-*/
+
 
 void liberaNosDaListaM(tListaM* lista){
     if(ehListaVaziaM(lista))
@@ -285,10 +124,7 @@ void liberaNosDaListaM(tListaM* lista){
     lista->tam=0;
 }
 
-/**
- * @brief libera a lista encadeada
- * @param lista ponteiro para lista 
-*/
+
 
 void liberaListaM(tListaM* lista){
     if(!lista)
@@ -363,7 +199,3 @@ int getTamM(tListaM* lista){
     return lista->tam;
 }
 
-tNoM* copiaNoM(tNoM* no){
-    tNoM* copia = criaNoM(no->item,no->desc);
-    return copia;
-}
