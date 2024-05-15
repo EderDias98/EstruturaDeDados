@@ -20,6 +20,8 @@ struct matriz{
  */
 Matriz* inicializaMatriz (int nlinhas, int ncolunas){
     Matriz * matriz = (Matriz*) calloc(1, sizeof(Matriz));
+    matriz->l = nlinhas;
+    matriz->c = ncolunas;
     matriz->vet = (int*) calloc(nlinhas*ncolunas,sizeof(int));
     return matriz;
 }
@@ -31,7 +33,7 @@ Matriz* inicializaMatriz (int nlinhas, int ncolunas){
  * pos-condicao: elemento [linha][coluna] da matriz modificado
  */
 void modificaElemento (Matriz* mat, int linha, int coluna, int elem){
-    mat->vet[linha*coluna + coluna] = elem;
+    mat->vet[linha*mat->c + coluna] = elem;
 }
 
 /*Retorna o elemento mat[linha][coluna]
@@ -41,7 +43,7 @@ void modificaElemento (Matriz* mat, int linha, int coluna, int elem){
  * pos-condicao: mat n„o È modificada
  */
 int recuperaElemento(Matriz* mat, int linha, int coluna){
-    return mat->vet[linha*coluna + coluna];
+    return mat->vet[linha*mat->c + coluna];
 }
 
 /*Retorna o n˙mero de colunas da matriz mat
@@ -72,10 +74,10 @@ int recuperaNLinhas (Matriz* mat){
  */
 Matriz* transposta (Matriz* mat){
 
-    Matriz* mat_t = (Matriz*) calloc(mat->l*mat->c, sizeof(int));
+    Matriz* mat_t = inicializaMatriz(mat->c, mat->l);
 
     for( int i=0; i< mat->l;i++){
-        for( int j=i; j<mat->c;j++){
+        for( int j=0; j<mat->c;j++){
             int elem = recuperaElemento(mat,i,j);
             modificaElemento(mat_t,j,i, elem);
         }
@@ -99,7 +101,7 @@ Matriz* multiplicacao (Matriz* mat1, Matriz* mat2){
         printf("Nao é possivel efetuar essa multiplicação!\n");
         return NULL;
     }
-    Matriz* mat_m = (Matriz*) calloc(mat1->l*mat2->c, sizeof(int));
+    Matriz* mat_m = inicializaMatriz(mat1->l,mat2->c);
     int elem=0;
     int soma=0;
     for(int i=0, j=0; i<mat1->l && j<mat2->c ; i++){
@@ -134,6 +136,7 @@ void imprimeMatriz(Matriz* mat){
         }
         printf("\n");
     }
+    printf("\n");
 }
 
 void imprimeLinhas (Matriz* mat, int indice);
