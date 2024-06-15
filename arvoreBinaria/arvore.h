@@ -17,5 +17,11 @@ int ArvVazia (tArv* a);
 int ArvPertence (tArv* a, char* nome);
 //imprime as informações dos nós da árvore
 void ArvImprime (tArv* a);
+//retorna a quantidade de folhas da arvore
+int Folhas(tArv* a);
+//retorna quantas vezes o aluno aparece na arvore
+int Ocorrencias(tArv* a, char * nome);
+// retorna altura
+int Altura(tArv* a);
 
 #endif

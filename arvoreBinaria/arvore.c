@@ -38,7 +38,7 @@ int ArvPertence (tArv* a, char* nome){
         return 0;
     }
     else{
-        return getNomeAluno(a->aluno) == nome ||
+        return !strcmp(getNomeAluno(a->aluno), nome) ||
         ArvPertence(a->esq, nome) ||
         ArvPertence(a->dir, nome);
 
@@ -53,4 +53,42 @@ void ArvImprime (tArv* a){
         ArvImprime(a->esq);
         ArvImprime(a->dir);
     }
+}
+
+//retorna a quantidade de folhas da arvore
+int Folhas(tArv* a){
+    if(ArvVazia(a)){
+        return 0;
+    }
+    
+    if(a->esq == NULL && a->dir == NULL){
+        return 1;
+    }
+    
+
+    return Folhas(a->esq)+ Folhas(a->dir);
+}
+
+int Ocorrencias(tArv* a, char * nome){
+    if(!ArvVazia(a)){
+        int cont = 0;
+        if( !strcmp(getNomeAluno(a->aluno), nome)){
+            cont = 1;
+        }
+        return cont + Ocorrencias(a,a->esq) + Ocorrencias(a,a->dir);
+    }
+
+    return 0;
+
+}
+
+int max(int a, int b){
+    return (a>b)? a : b;
+}
+
+int Altura(tArv* a){
+    if(ArvVazia(a)){
+        return -1;
+    }
+    return 1+  max(Altura(a->esq), Altura(a->dir));
 }

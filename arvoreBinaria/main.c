@@ -13,5 +13,7 @@ int main(){
     ArvCria(aluno_c, ArvCria(aluno_e, arvCriaVazia(), arvCriaVazia()),ArvCria(aluno_f,arvCriaVazia(), arvCriaVazia())));
     
     ArvImprime(a);
+
+    printf("\nQuantidade de folhas: %d\n", Folhas(a));
     return 0;
 }
