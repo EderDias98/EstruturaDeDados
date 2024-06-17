@@ -11,13 +11,13 @@ void preencheTabela(tArv *raiz, tTab *tabela, char *codigoAtual, int prof) {
     if (raiz->esq) {
         // Descendo para o filho esquerdo (0)
         codigoAtual[prof] = '0';
-        gerar_tabela_huffman(raiz->esq, tabela, codigoAtual, prof + 1);
+        preencheTabela(raiz->esq, tabela, codigoAtual, prof + 1);
     }
 
     if (raiz->dir) {
         // Descendo para o filho direito (1)
         codigoAtual[prof] = '1';
-        gerar_tabela_huffman(raiz->dir, tabela, codigoAtual, prof + 1);
+        preencheTabela(raiz->dir, tabela, codigoAtual, prof + 1);
     }
 
     if (!(raiz->esq) && !(raiz->dir)) {
@@ -44,7 +44,7 @@ int comparaPesos(const void *a, const void *b) {
 int ehBit1(char c, int bitPosition) {
     return (c & (1 << bitPosition)) != 0;
 }
-salvarCaracterNoBitMap(bitmap*bm,char c){
+void salvarCaracterNoBitMap(bitmap*bm,char c){
     for(int i=7, i>=0;i--){
         if(ehBit1(c,i)){
             bitmapAppendLeastSignificantBit(bm,1);
@@ -53,8 +53,8 @@ salvarCaracterNoBitMap(bitmap*bm,char c){
         }
     }
 }
-salvarCaracterDiminuidoNoBitMap(char* cod){
-    for(int i=0, i<8;i++){
+void salvarCodigoNoBitMap(bitmap* bm ,char* cod){
+    for(int i=0; cod[i]!='\0';i++){
         if(cod[i]=='1'){
             bitmapAppendLeastSignificantBit(bm,1);
         }else{
@@ -62,12 +62,18 @@ salvarCaracterDiminuidoNoBitMap(char* cod){
         }
     }
 }
+
+
+
 void ArvSalvaPreOrdem(tArv* a, bitmap* bm) {
     if (a != NULL) {
         // Armazena o nó atual
         if(getCaractere(a) ==-1){
             bitmapAppendLeastSignificantBit(bm,0);
-        }else{
+        }else if(getCaractere(a) == 257){
+            bitmapAppendLeastSignificantBit(bm,1);
+        }
+        else{
             bitmapAppendLeastSignificantBit(bm,1);
             salvarCaracterNoBitMap(bm,getCaractere(a));
         }
@@ -83,11 +89,22 @@ void salvaTexto(bitmap* bm, FILE* f, tTab* tb){
 
     int ch; // Variável para armazenar o ch lido
     while ((ch = fgetc(f)) != EOF) {
-        salvarCaracterDiminuidoNoBitMap(tb[ch].codigo);
+        salvarCodigoNoBitMap(tb[ch].codigo);
     }
-    // salvar um novo cod pra simbolizar o fim 
+    salvarCodigoNoBitMap(tb[128].codigo);
+    // salvar um novo cod pra simbolizar o fim que sera 128
 
 }
+
+void excluiArquivo(char* arquivo){
+    if (remove(caminho) == 0) {
+        printf("Arquivo deletado com sucesso.\n");
+    } else {
+        printf("Erro ao deletar o arquivo");
+        exit(-1);
+    }
+}
+
 void compactaArquivo(char *caminho){
     // contar a frequencia de caracteres do arquivo dado
 
@@ -139,8 +156,34 @@ void compactaArquivo(char *caminho){
     FILE* nf= fopen(novoCaminho,"w+");
     bitmap* bitmap = bitmapInit(8*qtd_bytes + 256*(8));
     //envolve trabalhar com bits
+    // tenho que salvar a arvore
+    ArvSalvaPreOrdem(arv,bitmap);
+    //salvar o texto
+    salvaTexto(bitmap,f,tab);
+    //salvar do bitmap pra nf
+    fwrite(bitmapGetContents(bitmap),sizeof(char),bitmapGetLength(bitmap),nf);
+
+    fclose(f);
+    excluiArquivo(caminho);
+    fclose(nf);  
+}
 
 
+
+tArv* ArvCarregaPreOrdem(bitmap* bm, int index) {
+    char bit = bitmapGetBit(bm,index);
+
+    if (bit == '1') {
+        int caractere = fgetc(file);
+        tArv* a = ArvCria(0,caractere,NULL,NULL);
+        return a; // Folha não tem filhos
+    } else {
+        tArv* a = ArvCria(0,-1,ArvCarregaPreOrdem(bm,index+9), ArvCarregaPreOrdem(bm,index+9)) // -1 para nós internos
+        return a;
+    }
+}
+void descompactaArquivo(char * caminho){
+    // ler a Arvore 
 }
 
 
