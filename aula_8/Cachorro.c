@@ -1,52 +1,42 @@
 #include "Cachorro.h"
-#include <stdio.h>
+#include "string.h"
 #include <stdlib.h>
-#include "BanhoTosa.h"
-#define MANSO 0
+#include <stdio.h>
+#include "Gato.h"
 #define BRAVO 1
-
-
+#define MANSO 0
 struct cachorro{
-    int estado;
     char* nome;
+    int estado;
 };
-
-
 
 Cachorro* inicCachorro(char* nome, int estado){
     Cachorro* c = (Cachorro*) malloc(sizeof(Cachorro));
-    c->nome = strdup1(nome);
+    c->nome = copiaStr(nome);
     c->estado = estado;
     return c;
 }
 
 void imprimeCachorro(Cachorro* c){
-
-    char* estado1 = "MANSO";
-    char* estado2 = "BRAVO";
-    char* estado = estado1;
-    if(c->estado == BRAVO)
-        estado = estado2;
-    
-    printf("%s, %s; ", c->nome, estado);
+    printf("%s ", c->nome);
 }
 
 void liberaCachorro(Cachorro* c){
     if(!c)
         return;
+    
     free(c->nome);
     free(c);
 }
 
-int ehCaoBravo(Cachorro* c){
-    if(c->estado == BRAVO)
-        return 1;
-    else return 0;
+char* getNomeCachorro(Cachorro * c){
+    return c->nome;
+}
+
+int getEstadoCachorro(Cachorro* c){
+    return c->estado;
 }
 void atribuiNivelAgressividadeCachorro(Cachorro* c, int estado){
     c->estado = estado;
 }
 
-char* getNomeC(Cachorro* c){
-    c->nome;
-}

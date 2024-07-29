@@ -42,8 +42,16 @@ char* getNomeAluno(tAluno* a){
 }
 
 int ehMaiorAluno(tAluno* a1, tAluno* a2){
-    if(a1->Cr>a2->Cr){
+    if(a1->Cr > a2->Cr){
         return 1;
-    }else return 0;
+    }else if(a1->Cr < a2->Cr){
+        return -1;
+    }
+    else return 0;
     
+}
+
+void AlunoLibera(tAluno* a){
+    free(a->nome);
+    free(a);
 }

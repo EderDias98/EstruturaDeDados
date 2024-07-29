@@ -12,7 +12,7 @@ int main(){
     tArv* a = ArvCria(aluno_a,ArvCria(aluno_b,arvCriaVazia(),ArvCria(aluno_d,arvCriaVazia(), arvCriaVazia())) ,
     ArvCria(aluno_c, ArvCria(aluno_e, arvCriaVazia(), arvCriaVazia()),ArvCria(aluno_f,arvCriaVazia(), arvCriaVazia())));
     
-    ArvImprime(a);
+    ArvImprime(a,0);
 
     printf("\nQuantidade de folhas: %d\n", Folhas(a));
     return 0;

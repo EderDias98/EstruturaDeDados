@@ -16,7 +16,7 @@ int ArvVazia (tArv* a);
 //indica a ocorrência (1) ou não (0) do caracter c
 int ArvPertence (tArv* a, char* nome);
 //imprime as informações dos nós da árvore
-void ArvImprime (tArv* a);
+void ArvImprime (tArv* a,int nivel);
 //retorna a quantidade de folhas da arvore
 int Folhas(tArv* a);
 //retorna quantas vezes o aluno aparece na arvore

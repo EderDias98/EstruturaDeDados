@@ -28,11 +28,7 @@ struct banhotosa{
 * pre-condicao: nao tem
 * pos-condicao: loja alocada e vazia, com listas de animais criadas e vazias  */
 BanhoTosa* inicBanhoTosa(char* nome){
-    BanhoTosa* loja = (BanhoTosa*) malloc(sizeof(BanhoTosa));
-    loja->nome = strdup1(nome);
-    loja->listaB = iniciaLista();
-    loja->listaM = iniciaLista();
-    return loja;
+
 }
 
 /* Insere o cachorro em uma das listas de animais, dependendo do seu nível de agressividade
@@ -41,11 +37,7 @@ BanhoTosa* inicBanhoTosa(char* nome){
 * pre-condicao: loja alocada e animal alocado
 * pos-condicao: loja contém o animal e uma de suas listas, dependendo do nível de agressividade do animal  */
 void cadastraCachorro(BanhoTosa* loja, Cachorro* dog){
-    if(ehCaoBravo(dog)){
-        insereLista(loja->listaB,dog,CACHORRO);
-    }else{
-        insereLista(loja->listaM,dog, CACHORRO);
-    }
+
 }
 
 /* Insere o cachorro em uma das listas de animais, dependendo do seu nível de agressividade
@@ -54,11 +46,7 @@ void cadastraCachorro(BanhoTosa* loja, Cachorro* dog){
 * pre-condicao: loja alocada e animal alocado
 * pos-condicao: loja contém o animal e uma de suas listas, dependendo do nível de agressividade do animal  */
 void cadastraGato(BanhoTosa* loja, Gato* cat){
-    if(ehGatoBravo(cat)){
-        insereLista(loja->listaB,cat,GATO);
-    }else{
-        insereLista(loja->listaM,cat, GATO);
-    }
+
 }
 
 
@@ -85,9 +73,6 @@ void atualizaSituacaoCachorro(BanhoTosa* loja, Cachorro* dog){
 * pre-condicao: loja alocada
 * pos-condicao: nenhuma alteração feita nos conteúdos das estruturas de dados */
 void imprimeBanhoTosa(BanhoTosa* loja){
-    printf("%s\n", loja->nome);
-    imprimeLista(loja->listaB);
-    imprimeLista(loja->listaM);
 
 }
 
@@ -100,10 +85,7 @@ void imprimeBanhoTosa(BanhoTosa* loja){
 * pre-condicao: loja alocada
 * pos-condicao: nenhuma alteração feita nos conteúdos das estruturas de dados */
 float calculaReceita(BanhoTosa* loja){
-    float rec =0;
-    rec += receitaLista(loja->listaB);
-    rec += receitaLista(loja->listaM);
-    return rec;
+   
 }
 
 
@@ -113,11 +95,5 @@ float calculaReceita(BanhoTosa* loja){
 * pre-condicao: loja alocada
 * pos-condicao: Toda a memória liberada, a não ser gatos e cachorros, que são responsabilidade do cliente. */
 void liberaBanhoTosa(BanhoTosa* loja){
-    if(!loja)
-        return;
-    
-    free(loja->nome);
-    liberaLista(loja->listaB);
-    liberaLista(loja->listaM);
-    free(loja);
+
 }

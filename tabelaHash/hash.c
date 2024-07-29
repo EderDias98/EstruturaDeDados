@@ -28,8 +28,10 @@ void HashInsere(PALAVRA** hash, char *p){
         // procurar indice da palavra na lista
         //se nao estiver criar e colocar no inicio
         while(pal!=NULL){
-            if(strcmp(p, pal->p))
+            if(strcmp(p, pal->p)==0){
                 pal->frq++;
+                break;
+            }
             pal = pal->prox;
         }
 
@@ -45,15 +47,11 @@ void HashInsere(PALAVRA** hash, char *p){
 PALAVRA* HashBusca(PALAVRA** hash, char *p){
     int h = HashFunc(p);
     PALAVRA* pal = hash[h] ;
-    if(pal == NULL){
-        // palavra nao esta na tabela
-        return NULL;
-    }else{
-        while(pal!=NULL){
-            if(strcmp(p, pal->p) == 0)
-                return pal;
-            pal = pal->prox;
-        }
+
+    while(pal!=NULL){
+        if(strcmp(p, pal->p) == 0)
+            return pal;
+        pal = pal->prox;
     }
     return NULL;
 }
@@ -69,3 +67,4 @@ int HashQuantidade(PALAVRA** hash){
     }
     return total;
 }
+

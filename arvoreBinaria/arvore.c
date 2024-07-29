@@ -47,11 +47,12 @@ int ArvPertence (tArv* a, char* nome){
     
 }
 
-void ArvImprime (tArv* a){
+void ArvImprime (tArv* a, int nivel){
     if(!ArvVazia(a)){
+        ArvImprime(a->esq,nivel +1);
+        for(int i=0; i< nivel; i++) printf(" ");
         imprimeAluno(a->aluno);
-        ArvImprime(a->esq);
-        ArvImprime(a->dir);
+        ArvImprime(a->dir,nivel +1);
     }
 }
 
@@ -75,7 +76,7 @@ int Ocorrencias(tArv* a, char * nome){
         if( !strcmp(getNomeAluno(a->aluno), nome)){
             cont = 1;
         }
-        return cont + Ocorrencias(a,a->esq) + Ocorrencias(a,a->dir);
+        return cont + Ocorrencias(a->esq,nome) + Ocorrencias(a->dir,nome);
     }
 
     return 0;

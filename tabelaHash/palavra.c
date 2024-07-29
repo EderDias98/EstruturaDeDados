@@ -5,7 +5,7 @@
 PALAVRA* PalavraInicializa(char*str){
     PALAVRA* pal = calloc(1, sizeof(PALAVRA));
     strcpy(pal->p,str);
-    pal->frq = 0;
+    pal->frq = 1;
     pal->prox = 0;
     return pal;
 }

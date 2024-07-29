@@ -6,13 +6,24 @@ typedef struct arv tArv;
 //Cria uma árvore vazia
 
 
-tArv* criaArvoreBusca();
+tArv* ArvoreDeBuscaCria();
+
+tAluno* ArvoreDeBuscaGetAluno(tArv* raiz);
  
 
-void insereNaArvoreBusca(tArv** raiz, tAluno* aluno);
+tArv* ArvoreDeBuscaInsere(tArv* raiz, tAluno* aluno);
 
 
-tAluno* buscaNaArvoreBusca(tArv* raiz, tAluno* aluno);
+tArv* ArvoreDeBuscaBusca(tArv* raiz, tAluno* aluno);
 
-void ArvImprime (tArv* a, int nivel);
+void ArvoreDeBuscaImprime (tArv* a, int nivel);
+tArv* ArvoreDeBuscaRemove(tArv* raiz, tAluno* aluno);
+
+//busca
+
+void ArvoreDeBuscaLibera(tArv* raiz);
+int ArvoreDeBuscaFolhas(tArv* raiz);
+
+tArv* ArvoreDeBuscaBalancea(tArv* raiz);
+
 #endif
